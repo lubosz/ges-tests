@@ -115,7 +115,7 @@ def simple():
   #format = ["video/mpeg", "video/mpeg", "audio/mpeg", "mpg"] #no start
   
   # Works
-  #format = ["video/x-matroska", "video/x-h264", "audio/x-vorbis", "mkv"]
+  format = ["video/x-matroska", "video/x-h264", "audio/x-vorbis", "mkv"]
   
   # mkv / mpeg
   #(GError('GStreamer error: negotiation problem.',), 'gstvideoencoder.c(1363): gst_video_encoder_chain (): /GESTimelinePipeline:gestimelinepipeline0/GstEncodeBin:internal-encodebin/avenc_mpeg1video:avenc_mpeg1video0:\nencoder not initialized')

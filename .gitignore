@@ -1,1 +1,9 @@
 *~
+CMakeCache.txt
+CMakeFiles
+Makefile
+__pycache__/
+caps
+clip
+cmake_install.cmake
+*bak
