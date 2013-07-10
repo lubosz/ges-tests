@@ -25,6 +25,60 @@ outputFile = 'file:///home/bmonkey/workspace/ges/export/shakemGESEncode'
 def handle_sigint(sig, frame):
   Gtk.main_quit()
 
+def videoAudioTimeline():
+  timeline = GES.Timeline.new_audio_video()
+  
+  layer = GES.Layer()
+  
+  timeline.add_layer(layer)
+
+  asset1 = GES.UriClipAsset.request_sync(videoFile1)
+  asset2 = GES.UriClipAsset.request_sync(videoFile2)
+  asset3 = GES.UriClipAsset.request_sync(videoFile3)
+  asset4 = GES.UriClipAsset.request_sync(videoFile4)
+
+  layer.add_asset(asset1, 0 * Gst.SECOND, 1 * Gst.SECOND, 10 * Gst.SECOND, GES.TrackType.UNKNOWN)
+  layer.add_asset(asset2, 10 * Gst.SECOND, 2 * Gst.SECOND, 10 * Gst.SECOND, GES.TrackType.UNKNOWN)
+  layer.add_asset(asset3, 20 * Gst.SECOND, 3 * Gst.SECOND, 10 * Gst.SECOND, GES.TrackType.UNKNOWN)
+  layer.add_asset(asset4, 30 * Gst.SECOND, 10 * Gst.SECOND, 30 * Gst.SECOND, GES.TrackType.UNKNOWN)
+  
+  timeline.commit()
+
+  pipeline = GES.TimelinePipeline()
+  pipeline.add_timeline(timeline)
+  
+  return (pipeline, timeline.get_duration())
+
+def videoTimeline():
+  timeline = GES.Timeline.new_video()
+  
+  layer = GES.Layer()
+  audiolayer = GES.Layer()
+  
+  timeline.add_layer(audiolayer)
+
+  musicAsset = GES.UriClipAsset.request_sync(musicFile)
+  
+  timeline.add_layer(layer)
+
+  asset1 = GES.UriClipAsset.request_sync(videoFile1)
+  asset2 = GES.UriClipAsset.request_sync(videoFile2)
+  asset3 = GES.UriClipAsset.request_sync(videoFile3)
+  asset4 = GES.UriClipAsset.request_sync(videoFile4)
+
+  layer.add_asset(asset1, 0 * Gst.SECOND, 1 * Gst.SECOND, 10 * Gst.SECOND, GES.TrackType.UNKNOWN)
+  layer.add_asset(asset2, 10 * Gst.SECOND, 2 * Gst.SECOND, 10 * Gst.SECOND, GES.TrackType.UNKNOWN)
+  layer.add_asset(asset3, 20 * Gst.SECOND, 3 * Gst.SECOND, 10 * Gst.SECOND, GES.TrackType.UNKNOWN)
+  layer.add_asset(asset4, 30 * Gst.SECOND, 10 * Gst.SECOND, 30 * Gst.SECOND, GES.TrackType.UNKNOWN)
+  audiolayer.add_asset(musicAsset, 0, 0, timeline.get_duration(), GES.TrackType.AUDIO)
+  
+  timeline.commit()
+
+  pipeline = GES.TimelinePipeline()
+  pipeline.add_timeline(timeline)
+  
+  return (pipeline, timeline.get_duration())
+
 def complexTimeline():
   timeline = GES.Timeline.new_audio_video()
   
@@ -62,16 +116,45 @@ def complexTimeline():
   
   return (pipeline, timeline.get_duration())
 
+def imageTimeline():
+  timeline = GES.Timeline.new_audio_video()
+  
+  layer = GES.Layer()
+  imagelayer = GES.Layer()
+  
+  timeline.add_layer(layer)
+  timeline.add_layer(imagelayer)
+
+  asset1 = GES.UriClipAsset.request_sync(videoFile1)
+  
+  imageasset1 = GES.UriClipAsset.request_sync(imageFile1)
+  imageasset2 = GES.UriClipAsset.request_sync(imageFile2)
+  imageasset3 = GES.UriClipAsset.request_sync(imageFile3)
+
+  layer.add_asset(imageasset1, 0 * Gst.SECOND, 0, 1 * Gst.SECOND, GES.TrackType.UNKNOWN)
+  layer.add_asset(asset1, 0 * Gst.SECOND, 0, 11 * Gst.SECOND, GES.TrackType.UNKNOWN)
+  imagelayer.add_asset(imageasset2, 10 * Gst.SECOND, 0, 1 * Gst.SECOND, GES.TrackType.UNKNOWN)
+  imagelayer.add_asset(imageasset3, 20 * Gst.SECOND, 0, 1 * Gst.SECOND, GES.TrackType.UNKNOWN)
+  
+  timeline.commit()
+
+  pipeline = GES.TimelinePipeline()
+  pipeline.add_timeline(timeline)
+  
+  return (pipeline, timeline.get_duration())
+
 if __name__ =="__main__":
   Gst.init(None)
   GES.init()
   
   em = EncoderManager()
-  #em.addJob(outputFile, "firefox", shortPipeLine)
-  #em.addJob("chrome")
-  #em.addJob("safari")
-  #em.addJob("mpeg")
-  em.addJob(outputFile, "matroska-h264-vorbis", complexTimeline)
+  em.addJob("file:///home/bmonkey/workspace/ges/export/videoAudioTimeline", "matroska-h264-vorbis", videoAudioTimeline)
+  
+  em.addJob("file:///home/bmonkey/workspace/ges/export/videoTimeline", "matroska-h264-vorbis", videoTimeline)
+
+  em.addJob("file:///home/bmonkey/workspace/ges/export/complexTimeline", "matroska-h264-vorbis", complexTimeline)
+
+  
   em.encodeNext()
   
   signal.signal(signal.SIGINT, handle_sigint)
