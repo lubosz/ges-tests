@@ -30,7 +30,7 @@ def encoderProfile(container, video, audio):
     Gst.Caps.new_empty_simple(container),
     None)
     
-  embed()
+  #embed()
     
   print (container_profile)
  
@@ -59,7 +59,7 @@ if __name__ =="__main__":
   GES.init()
   
   timeline = GES.Timeline()
-  track = GES.VideoTrack()
+  track = GES.VideoTrack.new()
   timeline.add_track(track)
   layer = GES.Layer()
   timeline.add_layer(layer)
@@ -71,20 +71,17 @@ if __name__ =="__main__":
 
   pipeline = GES.TimelinePipeline()
   pipeline.add_timeline(timeline)
-  
   # does not start, no error
-  format = ["video/quicktime", "video/x-h264", "audio/x-aac", "mov"]
+  format = ["video/x-matroska", "video/x-h264", "audio/aac", "mov"]
   
   # Works
   #format = ["video/x-matroska", "video/x-h264", "audio/x-vorbis", "mkv"]
   
-  #container_profile = encoderProfile(format[0], format[1], format[2])
-  disc = GstPbutils.Discoverer()
-  info = disc.discover_uri("file:///home/bmonkey/workspace/ges/data/trailer_480p.mov")
-  container_profile = GstPbutils.EncodingProfile.from_discoverer(info)
+  container_profile = encoderProfile(format[0], format[1], format[2])
+  #disc = GstPbutils.Discoverer()
+  #info = disc.discover_uri("file:///home/bmonkey/workspace/ges/data/trailer_480p.mov")
+  #container_profile = GstPbutils.EncodingProfile.from_discoverer(info)
 
-  
-  
   pipeline.set_render_settings(outputFile + "." + format[3], container_profile)
   pipeline.set_mode(GES.PipelineFlags.RENDER)
   pipeline.set_state(Gst.State.PLAYING)
