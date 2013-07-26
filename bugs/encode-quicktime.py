@@ -20,23 +20,26 @@ def duration_querier(pipeline):
     return True
 
 def encoderProfile(container, video, audio):
+
+  cont_caps = Gst.Caps.from_string(container)
+
   container_profile = GstPbutils.EncodingContainerProfile.new(
     "quicktime",
     "QuickTime Encoding Profile",
-    Gst.Caps.new_empty_simple(container),
+    cont_caps,
     None)
  
   video_profile = GstPbutils.EncodingVideoProfile.new(
-    Gst.Caps.new_empty_simple(video),
+    Gst.Caps.from_string(video),
     None,
-    Gst.Caps.new_empty_simple("video/x-raw"),
+    Gst.Caps.from_string("video/x-raw"),
     0)
   container_profile.add_profile(video_profile)
  
   audio_profile = GstPbutils.EncodingAudioProfile.new(
-    Gst.Caps.new_empty_simple(audio),
+    Gst.Caps.from_string(audio),
     None,
-    Gst.Caps.new_empty_simple("audio/x-raw"),
+    Gst.Caps.from_string("audio/x-raw"),
     0)
   container_profile.add_profile(audio_profile)
 
@@ -55,14 +58,12 @@ if __name__ =="__main__":
   
   timeline.commit()
 
-  pipeline = GES.TimelinePipeline()
+  pipeline = GES.Pipeline()
   pipeline.add_timeline(timeline)
   
-  # does not start, no error
-  format = ["video/quicktime", "video/x-h264", "audio/x-vorbis", "mp4"]
+  #dudio/mpeg mpegversion: 4 stream-format: raw 
   
-  # Works
-  #format = ["video/x-matroska", "video/x-h264", "audio/x-vorbis", "mkv"]
+  format = ["video/quicktime,variant=iso", "video/x-h264", "audio/mpeg,mpegversion=4,stream-format=raw", "mov"]
   
   container_profile = encoderProfile(format[0], format[1], format[2])
   

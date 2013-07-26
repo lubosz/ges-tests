@@ -57,7 +57,7 @@ if __name__ =="__main__":
  
     layer.add_asset(audio_asset, 0, 0, timeline.get_duration(), GES.TrackType.AUDIO)
  
-    pipeline = GES.TimelinePipeline()
+    pipeline = GES.Pipeline()
     pipeline.add_timeline(timeline)
  
     container_profile = \

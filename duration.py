@@ -23,7 +23,7 @@ def simple():
   
   imagelayer.add_asset(imageasset, 5 * Gst.SECOND, 0, 1 * Gst.SECOND, GES.TrackType.VIDEO)
 
-  pipeline = GES.TimelinePipeline()
+  pipeline = GES.Pipeline()
   pipeline.add_timeline(timeline)
   pipeline.set_state(Gst.State.PLAYING)
     

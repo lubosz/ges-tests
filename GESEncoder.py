@@ -27,20 +27,20 @@ class VideoFormat:
     container_profile = GstPbutils.EncodingContainerProfile.new(
       "pitivi-profile",
       "Pitivi encoding profile",
-      Gst.Caps.new_empty_simple(self.container),
+      Gst.Caps.from_string(self.container),
       None)
    
     video_profile = GstPbutils.EncodingVideoProfile.new(
-      Gst.Caps.new_empty_simple(self.video),
+      Gst.Caps.from_string(self.video),
       None,
-      Gst.Caps.new_empty_simple("video/x-raw"),
+      Gst.Caps.from_string("video/x-raw,width=1920,height=1080,framerate=30/1"),
       0)
     container_profile.add_profile(video_profile)
    
     audio_profile = GstPbutils.EncodingAudioProfile.new(
-      Gst.Caps.new_empty_simple(self.audio),
+      Gst.Caps.from_string(self.audio),
       None,
-      Gst.Caps.new_empty_simple("audio/x-raw"),
+      Gst.Caps.from_string("audio/x-raw"),
       0)
     container_profile.add_profile(audio_profile)
 
@@ -54,9 +54,8 @@ class Encoder:
       self.formats = {
         "firefox" : VideoFormat("application/ogg", "video/x-theora", "audio/x-vorbis", "ogv"),
         "chrome" : VideoFormat("video/webm", "video/x-vp8", "audio/x-vorbis", "webm"),
-        "safari" : VideoFormat("video/mp4", "video/x-h264", "audio/x-aac", "mp4"),
-        "quicktime" : VideoFormat("video/quicktime", "video/x-h264", "audio/x-vorbis", "mov"),
-        "mpeg" : VideoFormat("video/mpeg", "video/mpeg", "audio/mpeg", "mpg"),
+        "safari" : VideoFormat("video/quicktime,variant=iso", "video/x-h264", "audio/mpeg,mpegversion=4,stream-format=raw", "mp4"),
+        "mpeg" : VideoFormat("video/mpeg,mpegversion=2,systemstream=true", "video/mpeg,mpegversion=4,systemstream=false", "audio/mpeg,mpegversion=4,stream-format=raw", "mpg"),
         "matroska-vp8-vorbis" : VideoFormat("video/x-matroska", "video/x-vp8", "audio/x-vorbis", "mkv"),
         "matroska-h264-vorbis" : VideoFormat("video/x-matroska", "video/x-h264", "audio/x-vorbis", "mkv") 
       }

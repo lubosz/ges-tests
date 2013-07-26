@@ -35,7 +35,7 @@ def shortPipeLine():
   
   timeline.commit()
 
-  pipeline = GES.TimelinePipeline()
+  pipeline = GES.Pipeline()
   pipeline.add_timeline(timeline)
   
   return (pipeline, timeline.get_duration())

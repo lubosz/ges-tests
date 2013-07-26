@@ -50,7 +50,7 @@ void main() {
   GMainLoop *mainloop;
   GESLayer *layer;
 
-  GESTimelinePipeline *timeline_pipeline;
+  GESPipeline *timeline_pipeline;
   GESTimeline *timeline;
   GESUriClip *clip;
 

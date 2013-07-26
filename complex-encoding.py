@@ -25,6 +25,17 @@ outputFile = 'file:///home/bmonkey/workspace/ges/export/shakemGESEncode'
 def handle_sigint(sig, frame):
   Gtk.main_quit()
 
+def testTimeline():
+  timeline = GES.Timeline.new_audio_video()
+  layer = GES.Layer()
+  timeline.add_layer(layer)
+  asset = GES.Asset.request(GES.TestClip, None)
+  layer.add_asset(asset, 0 * Gst.SECOND, 0 * Gst.SECOND, 10 * Gst.SECOND, GES.TrackType.UNKNOWN)
+  timeline.commit()
+  pipeline = GES.Pipeline()
+  pipeline.add_timeline(timeline)
+  return (pipeline, timeline.get_duration())
+
 def videoAudioTimeline():
   timeline = GES.Timeline.new_audio_video()
   
@@ -44,7 +55,7 @@ def videoAudioTimeline():
   
   timeline.commit()
 
-  pipeline = GES.TimelinePipeline()
+  pipeline = GES.Pipeline()
   pipeline.add_timeline(timeline)
   
   return (pipeline, timeline.get_duration())
@@ -74,7 +85,7 @@ def videoTimeline():
   
   timeline.commit()
 
-  pipeline = GES.TimelinePipeline()
+  pipeline = GES.Pipeline()
   pipeline.add_timeline(timeline)
   
   return (pipeline, timeline.get_duration())
@@ -111,7 +122,7 @@ def complexTimeline():
   
   timeline.commit()
 
-  pipeline = GES.TimelinePipeline()
+  pipeline = GES.Pipeline()
   pipeline.add_timeline(timeline)
   
   return (pipeline, timeline.get_duration())
@@ -138,7 +149,7 @@ def imageTimeline():
   
   timeline.commit()
 
-  pipeline = GES.TimelinePipeline()
+  pipeline = GES.Pipeline()
   pipeline.add_timeline(timeline)
   
   return (pipeline, timeline.get_duration())
@@ -148,11 +159,15 @@ if __name__ =="__main__":
   GES.init()
   
   em = EncoderManager()
-  em.addJob("file:///home/bmonkey/workspace/ges/export/videoAudioTimeline", "matroska-h264-vorbis", videoAudioTimeline)
+  #em.addJob("file:///home/bmonkey/workspace/ges/export/videoAudioTimeline", "mpeg", videoAudioTimeline)
   
-  em.addJob("file:///home/bmonkey/workspace/ges/export/videoTimeline", "matroska-h264-vorbis", videoTimeline)
-
-  em.addJob("file:///home/bmonkey/workspace/ges/export/complexTimeline", "matroska-h264-vorbis", complexTimeline)
+  em.addJob("file:///home/bmonkey/workspace/ges/export/testTimeline", "firefox", testTimeline)
+  em.addJob("file:///home/bmonkey/workspace/ges/export/testTimeline", "chrome", testTimeline)
+  em.addJob("file:///home/bmonkey/workspace/ges/export/testTimeline", "safari", testTimeline)
+  
+  
+  #em.addJob("file:///home/bmonkey/workspace/ges/export/videoTimeline", "matroska-h264-vorbis", videoTimeline)
+  #em.addJob("file:///home/bmonkey/workspace/ges/export/complexTimeline", "matroska-h264-vorbis", complexTimeline)
 
   
   em.encodeNext()

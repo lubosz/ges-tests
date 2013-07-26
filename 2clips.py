@@ -30,7 +30,7 @@ def simple():
   layer.add_asset(asset2, 3 * Gst.SECOND, 0 * Gst.SECOND, 3 * Gst.SECOND, asset2.get_supported_formats())
 
 
-  pipeline = GES.TimelinePipeline()
+  pipeline = GES.Pipeline()
   pipeline.add_timeline(timeline)
   pipeline.set_state(Gst.State.PLAYING)
     

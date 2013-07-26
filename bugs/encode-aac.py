@@ -69,7 +69,7 @@ if __name__ =="__main__":
   
   timeline.commit()
 
-  pipeline = GES.TimelinePipeline()
+  pipeline = GES.Pipeline()
   pipeline.add_timeline(timeline)
   # does not start, no error
   format = ["video/x-matroska", "video/x-h264", "audio/aac", "mov"]

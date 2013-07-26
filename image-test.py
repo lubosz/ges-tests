@@ -6,23 +6,18 @@ from gi.repository import GES, Gst, Gtk, GstPbutils, GObject
 
 import signal
 
-# File URL http://download.blender.org/peach/trailer/trailer_400p.ogg
-
 videoFile1 = "file:///home/bmonkey/workspace/ges/data/trailer_480p.mov"
-
 videoFile2 = "file:///home/bmonkey/workspace/ges/data/Sesame Street- Kermit and Joey Say the Alphabet.mp4"
-
 videoFile3 = "file:///home/bmonkey/workspace/ges/data/BlenderFluid.webm"
-
 videoFile4 = "file:///home/bmonkey/workspace/ges/data/Blender Physics Animation HD.flv"
 
-musicFile = "file:///home/bmonkey/workspace/ges/data/prof.ogg"
+imageFile1 = "file:///home/bmonkey/workspace/ges/data/gradient720x576.jpg"
+imageFile2 = "file:///home/bmonkey/workspace/ges/data/gradient1280x576.jpg"
+imageFile3 = "file:///home/bmonkey/workspace/ges/data/gradient720x720.jpg"
+imageFile4 = "file:///home/bmonkey/workspace/ges/data/gradient1280x720.jpg"
+imageFile5 = "file:///home/bmonkey/workspace/ges/data/gradient1920x1080.jpg"
 
-imageFile1 = "file:///home/bmonkey/workspace/ges/data/LAMP_720_576.jpg"
-imageFile2 = "file:///home/bmonkey/workspace/ges/data/wallpaper-1946968.jpg"
-imageFile3 = "file:///home/bmonkey/workspace/ges/data/Fish.png"
-
-outputFile = 'file:///home/bmonkey/workspace/ges/export/shakemGESTest'
+outputFile = 'file:///home/bmonkey/workspace/ges/export/shakemGESimageTest'
 
 def handle_sigint(sig, frame):
     Gtk.main_quit()
@@ -71,31 +66,35 @@ def simple():
   timeline = GES.Timeline.new_audio_video()
   
   layer = GES.Layer()
-  audiolayer = GES.Layer()
+  #audiolayer = GES.Layer()
   imagelayer = GES.Layer()
   
-  timeline.add_layer(layer)
-  timeline.add_layer(audiolayer)
   timeline.add_layer(imagelayer)
+  timeline.add_layer(layer)
+  #timeline.add_layer(audiolayer)
 
+  asset = GES.Asset.request(GES.TestClip, None)
+  #musicAsset = GES.UriClipAsset.request_sync(musicFile)
+  
   asset1 = GES.UriClipAsset.request_sync(videoFile1)
   asset2 = GES.UriClipAsset.request_sync(videoFile2)
   asset3 = GES.UriClipAsset.request_sync(videoFile3)
   asset4 = GES.UriClipAsset.request_sync(videoFile4)
-  musicAsset = GES.UriClipAsset.request_sync(musicFile)
   
   imageasset1 = GES.UriClipAsset.request_sync(imageFile1)
   imageasset2 = GES.UriClipAsset.request_sync(imageFile2)
   imageasset3 = GES.UriClipAsset.request_sync(imageFile3)
-
+  imageasset4 = GES.UriClipAsset.request_sync(imageFile4)
+  imageasset5 = GES.UriClipAsset.request_sync(imageFile5)
+  
   #layer.add_asset(imageasset1, 0 * Gst.SECOND, 0, 1 * Gst.SECOND, GES.TrackType.UNKNOWN)
-  layer.add_asset(asset1, 0 * Gst.SECOND, 0, 10  * Gst.SECOND, GES.TrackType.UNKNOWN)
-  imagelayer.add_asset(imageasset2, 10 * Gst.SECOND, 0, 2 * Gst.SECOND, GES.TrackType.UNKNOWN)
-  layer.add_asset(asset2, 10 * Gst.SECOND, 0, 10 * Gst.SECOND, GES.TrackType.UNKNOWN)
-  imagelayer.add_asset(imageasset3, 20 * Gst.SECOND, 0, 2 * Gst.SECOND, GES.TrackType.UNKNOWN)
-  layer.add_asset(asset3, 20 * Gst.SECOND, 5 * Gst.SECOND, 10 * Gst.SECOND, GES.TrackType.UNKNOWN)
-  layer.add_asset(asset4, 30 * Gst.SECOND, 10 * Gst.SECOND, 30 * Gst.SECOND, GES.TrackType.UNKNOWN)
-  audiolayer.add_asset(musicAsset, 0, 0, timeline.get_duration(), GES.TrackType.AUDIO)
+  layer.add_asset(asset4, 0 * Gst.SECOND, 0, 10  * Gst.SECOND, GES.TrackType.VIDEO)
+  imagelayer.add_asset(imageasset5, 5 * Gst.SECOND, 10  * Gst.SECOND, 2 * Gst.SECOND, GES.TrackType.VIDEO)
+  #layer.add_asset(asset2, 10 * Gst.SECOND, 0, 10 * Gst.SECOND, GES.TrackType.UNKNOWN)
+  #imagelayer.add_asset(imageasset3, 20 * Gst.SECOND, 0, 2 * Gst.SECOND, GES.TrackType.UNKNOWN)
+  #layer.add_asset(asset3, 20 * Gst.SECOND, 5 * Gst.SECOND, 10 * Gst.SECOND, GES.TrackType.UNKNOWN)
+  #layer.add_asset(asset4, 30 * Gst.SECOND, 10 * Gst.SECOND, 30 * Gst.SECOND, GES.TrackType.UNKNOWN)
+  #audiolayer.add_asset(musicAsset, 0, 0, timeline.get_duration(), GES.TrackType.AUDIO)
   
   timeline.commit()
 
@@ -138,7 +137,7 @@ def simple():
   bus = pipeline.get_bus()
   bus.add_signal_watch()
   bus.connect("message", busMessageCb)
-  GObject.timeout_add(300, duration_querier, pipeline)
+  GObject.timeout_add(1000, duration_querier, pipeline)
  
   signal.signal(signal.SIGINT, handle_sigint)
   Gtk.main()

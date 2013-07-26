@@ -44,7 +44,7 @@ def simple():
   
   timeline.commit()
 
-  pipeline = GES.TimelinePipeline()
+  pipeline = GES.Pipeline()
   pipeline.add_timeline(timeline)
   
   #encoding
