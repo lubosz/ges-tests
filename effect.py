@@ -6,19 +6,6 @@ from gi.repository import GES, Gst, Gtk, GstPbutils, GObject
 
 import signal
 
-videoFile1 = "file:///home/bmonkey/workspace/ges/data/trailer_480p.mov"
-videoFile2 = "file:///home/bmonkey/workspace/ges/data/Sesame Street- Kermit and Joey Say the Alphabet.mp4"
-videoFile3 = "file:///home/bmonkey/workspace/ges/data/BlenderFluid.webm"
-videoFile4 = "file:///home/bmonkey/workspace/ges/data/Blender Physics Animation HD.flv"
-
-imageFile1 = "file:///home/bmonkey/workspace/ges/data/gradient720x576.jpg"
-imageFile2 = "file:///home/bmonkey/workspace/ges/data/gradient1280x576.jpg"
-imageFile3 = "file:///home/bmonkey/workspace/ges/data/gradient720x720.jpg"
-imageFile4 = "file:///home/bmonkey/workspace/ges/data/gradient1280x720.jpg"
-imageFile5 = "file:///home/bmonkey/workspace/ges/data/gradient1920x1080.jpg"
-
-outputFile = 'file:///home/bmonkey/workspace/ges/export/shakemGESimageTest'
-
 def handle_sigint(sig, frame):
     Gtk.main_quit()
  
@@ -41,37 +28,39 @@ def simple():
 
   timeline = GES.Timeline.new_audio_video()
   
-  #layer = GES.Layer()
-  layer = GES.SimpleLayer.new()
+  layer = GES.Layer()
   
   timeline.add_layer(layer)
   
-  asset = GES.UriClipAsset.request_sync(videoFile1)
+  #asset = GES.UriClipAsset.request_sync(videoFile1)
   
-  #src = GES.UriClip.new(videoFile1)
-  #src = GES.SourceClip()
-  #src.add_asset(asset)
-  src = GES.TestClip()
-  src.set_property("vpattern", GES.VideoTestPattern.SMPTE75)
+  asset = GES.Asset.request(GES.TestClip, None)
   
-  src.set_property("duration", 5 * Gst.SECOND)
-  src.set_property("in-point", 5 * Gst.SECOND)
+  #src = GES.TestClip()
+  #asset.set_property("pattern", GES.VideoTestPattern.SMPTE75)
+  #src.set_property("duration", 5 * Gst.SECOND)
+  #src.set_property("in-point", 5 * Gst.SECOND)
   #src.set_property("supported-formats", GES.TrackType.VIDEO)
   
-  effect = GES.Effect.new("agingtv")
+  #effect = GES.Effect.new("videobalance")
+
+  # this works
+  #effect = GES.Effect.new("videobalance hue=0.5")
+
+  #effect = GES.Effect.new("agingtv")
   #effect = GES.Effect.new("videobalance saturation=1.5 hue=+0.5")
-  #effect = GES.Effect.new("frei0r-filter-scale0tilt scale-x=1.0")
+  effect = GES.Effect.new("frei0r-filter-scale0tilt")
   #embed()
     
-  #layer.add_asset(asset, 0 * Gst.SECOND, 5  * Gst.SECOND, 10  * Gst.SECOND, GES.TrackType.VIDEO)
+  clip = layer.add_asset(asset, 0 * Gst.SECOND, 0  * Gst.SECOND, 2  * Gst.SECOND, GES.TrackType.VIDEO)
   
-  layer.add_clip(src)
-  
-  #layer.add_object(src, 0)
-  
-  src.add(effect)
+  clip.add(effect)
+  clip.set_property("vpattern", GES.VideoTestPattern.SMPTE75)
 
   timeline.commit()
+
+  print(effect.list_children_properties())
+  effect.set_child_property("tilt-x", 0.8)
 
   pipeline = GES.Pipeline()
   pipeline.add_timeline(timeline)
